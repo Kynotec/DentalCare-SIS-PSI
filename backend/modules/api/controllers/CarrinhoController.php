@@ -21,6 +21,16 @@ class CarrinhoController extends ActiveController
         return $behaviors;
     }
 
+    public function checkAccess($action, $model = null, $params = [])
+    {
+        //QUERY PARAM
+        if (\Yii::$app->params['id'] == 2){
+            if($action === "delete"){
+                throw  new yii\web\ForbiddenHttpException("Acesso Proibido!");
+            }
+        }
+    }
+
     public function actionCount()
     {
         $carrinhosmodel = new $this->modelClass;
