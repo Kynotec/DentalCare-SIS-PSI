@@ -15,7 +15,7 @@ class UserController extends ActiveController
     public $modelClass = 'common\models\Profiles'; // Para ir buscar o modelo a ser usado no controlador
 
     //METODO DE AUTENTICAÇÃO
-    /*
+
     public function behaviors()
     {
         Yii::$app->params['id'] = 0;
@@ -25,7 +25,7 @@ class UserController extends ActiveController
         ];
         return $behaviors;
     }
-*/
+
 
 
     public function actionUtentespelonome($nome)
@@ -41,9 +41,6 @@ class UserController extends ActiveController
 
         return $users;
     }
-
-
-
 
 
 
