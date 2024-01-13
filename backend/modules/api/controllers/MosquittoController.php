@@ -8,7 +8,7 @@ class MosquittoController extends Controller
 {
     public function actionSendConsulta()
     {
-        $utente = new MqttClient('127.0.0.1',1883,'utenteId');
+        $utente = new MqttClient('127.0.0.1',1883,'clientId');
         $utente -> connect(null,true);
 
         $utente->subscribe("marcarConsulta", function (string $topic, string $message, bool $retained) use ($utente) {
@@ -21,7 +21,7 @@ class MosquittoController extends Controller
 
     public function actionSendservicocarrinho()
     {
-        $utente = new MqttClient('127.0.0.1',1883,'utenteId');
+        $utente = new MqttClient('127.0.0.1',1883,'clientId');
         $utente -> connect(null,true);
 
         $utente->subscribe("adicionarservicoCarrinho", function (string $topic, string $message, bool $retained) use ($utente) {
@@ -33,7 +33,7 @@ class MosquittoController extends Controller
 
     public function actionSendprodutocarrinho()
     {
-        $utente = new MqttClient('127.0.0.1',1883,'utenteId');
+        $utente = new MqttClient('127.0.0.1',1883,'clientId');
         $utente -> connect(null,true);
 
         $utente->subscribe("adicionarprodutoCarrinho", function (string $topic, string $message, bool $retained) use ($utente) {
@@ -45,7 +45,7 @@ class MosquittoController extends Controller
 
     public function actionDeleteprodutocarrinho()
     {
-        $utente = new MqttClient('127.0.0.1',1883,'utenteId');
+        $utente = new MqttClient('127.0.0.1',1883,'clientId');
         $utente -> connect(null,true);
 
         $utente->subscribe("deleteprodutoCarrinho", function (string $topic, string $message, bool $retained) use ($utente) {
@@ -58,7 +58,7 @@ class MosquittoController extends Controller
 
     public function actionDeleteservicocarrinho()
     {
-        $utente = new MqttClient('127.0.0.1',1883,'utenteId');
+        $utente = new MqttClient('127.0.0.1',1883,'clientId');
         $utente -> connect(null,true);
 
         $utente->subscribe("deleteservicoCarrinho", function (string $topic, string $message, bool $retained) use ($utente) {
@@ -71,7 +71,7 @@ class MosquittoController extends Controller
 
     public function actionDeletemarcacao()
     {
-        $utente = new MqttClient('127.0.0.1',1883,'utenteId');
+        $utente = new MqttClient('127.0.0.1',1883,'clientId');
         $utente -> connect(null,true);
 
         $utente->subscribe("deleteMarcacao", function (string $topic, string $message, bool $retained) use ($utente) {
