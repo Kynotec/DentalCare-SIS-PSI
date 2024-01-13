@@ -78,7 +78,7 @@ class MosquittoController extends Controller
             $utente->interrupt();
         }, MqttClient::QOS_EXACTLY_ONCE);
         $utente->loop(true);
-        $utente->publish("deleteMarcacao", 'A marcação foi desmarcada', 1);
+        $utente->publish("deleteMarcacao", 'A consulta foi desmarcada', 1);
     }
 
 }
