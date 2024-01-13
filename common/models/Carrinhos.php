@@ -12,7 +12,7 @@ use Yii;
  * @property int|null $stock
  * @property float|null $valortotal
  *
- * @property LinhaCarrinhos[] $linhaCarrinhos
+ * @property Linha_carrinhos[] $linha_carrinhos
  */
 class Carrinhos extends \yii\db\ActiveRecord
 {
@@ -56,6 +56,6 @@ class Carrinhos extends \yii\db\ActiveRecord
      */
     public function getLinhaCarrinhos()
     {
-        return $this->hasMany(LinhaCarrinhos::class, ['carrinho_id' => 'id']);
+        return $this->hasMany(Linha_carrinhos::class, ['carrinho_id' => 'id']);
     }
 }

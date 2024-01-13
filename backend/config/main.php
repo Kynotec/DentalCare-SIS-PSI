@@ -58,13 +58,11 @@ return [
                     'pluralize' =>false,
 
                     'extraPatterns' => [
-                        'GET count' => 'count', // 'count' é 'actionCount'
-                        //'GET {id}/preco' => 'preco', // 'preco' é 'actionPreco'
-
+                        'GET {user_id}' => 'datacarrinho', // 'datacarrinho' é 'actionDatacarrinho'
 
                     ],
                     'tokens' => [
-                        '{id}' => '<id:\\d+>',
+                        '{user_id}' => '<user_id:\\d+>',
                     ],
                 ],
                 //////////////////////////////////////CONSULTA//////////////////////////////////////////////////////////
