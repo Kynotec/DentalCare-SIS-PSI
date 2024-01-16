@@ -105,10 +105,12 @@ return [
 
                     'extraPatterns' => [
                         'PUT alterarpreco/{nome}' => 'alterarpreco', // 'alterarpreco' é 'actionAlterarpreco'
-
+                        'GET {id}' => 'produtoid', // 'produtoid' é 'actionProdutoid'
+                       
                     ],
                     'tokens' => [
                         '{nome}' => '<nome:\\w+>',
+                        '{id}' => '<id:\d+>',
                     ],
                 ],
                 //////////////////////////////////////SERVICO//////////////////////////////////////////////////////////

@@ -26,6 +26,21 @@ class UserController extends ActiveController
         return $behaviors;
     }
 
+    // Obter perfil do cliente com o login feito na app mobile
+    public function actionGetPerfil()
+    {
+        $userId = Yii::$app->user->getId();
+        $perfil = $this->modelClass::find()
+            ->where(['user_id' => $userId])
+            ->one();
+
+        if ($perfil === null) {
+            throw new \yii\web\NotFoundHttpException('Perfil não encontrado.');
+        }
+
+        return $perfil;
+    }
+
 
 
     public function actionUtentespelonome($nome)
