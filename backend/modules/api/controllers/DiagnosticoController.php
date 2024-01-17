@@ -19,15 +19,20 @@ class DiagnosticoController extends ActiveController
         ];
         return $behaviors;
     }
-
+    //Serve para filtrar atraves do token os diagnósticos do perfil autenticado
     public function actionGetPerfilDiagnostico()
     {
         $model = new $this->modelClass;
 
-        $perfil = $model::findOne(Yii::$app->params['id']);
+        $diagnosticos = $model::find()
+            ->select(['id', 'descricao', 'data', 'hora', 'consulta_id','profile_id'])
+            ->where(['profile_id'=>Yii::$app->params['id']])
+            ->asArray()
+            ->all();
 
-        return $perfil;
+        return $diagnosticos;
     }
+
     public function actionDatadiagnostico($profile_id)
     {
         $diagnosticomodel = new $this->modelClass;
