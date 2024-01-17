@@ -9,8 +9,6 @@ class ServicoController extends ActiveController
 {
     public $modelClass = 'common\models\Servicos';
 
-  
-
     public function actionServicospeladescricao($descricao)
     {
         $servicomodel = new $this->modelClass;

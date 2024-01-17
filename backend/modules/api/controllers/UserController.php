@@ -36,8 +36,6 @@ class UserController extends ActiveController
         return $perfil;
     }
 
-
-
     public function actionUtentespelonome($nome)
     {
         $usermodel = new $this->modelClass;

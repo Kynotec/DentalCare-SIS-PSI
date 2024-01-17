@@ -20,7 +20,14 @@ class DiagnosticoController extends ActiveController
         return $behaviors;
     }
 
+    public function actionGetPerfilDiagnostico()
+    {
+        $model = new $this->modelClass;
 
+        $perfil = $model::findOne(Yii::$app->params['id']);
+
+        return $perfil;
+    }
     public function actionDatadiagnostico($profile_id)
     {
         $diagnosticomodel = new $this->modelClass;
