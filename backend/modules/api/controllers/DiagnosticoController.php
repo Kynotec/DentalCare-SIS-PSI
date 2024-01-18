@@ -25,8 +25,18 @@ class DiagnosticoController extends ActiveController
         $model = new $this->modelClass;
 
         $diagnosticos = $model::find()
-            ->select(['id', 'descricao', 'data', 'hora', 'consulta_id','profile_id'])
-            ->where(['profile_id'=>Yii::$app->params['id']])
+            ->select([
+                'diagnosticos.id',
+                'diagnosticos.descricao',
+                'diagnosticos.data',
+                'diagnosticos.hora',
+
+                'diagnosticos.consulta_id',
+                'diagnosticos.profile_id',
+                '(SELECT data FROM consultas WHERE id = diagnosticos.consulta_id) AS consultadata',
+                '(SELECT hora FROM consultas WHERE id = diagnosticos.consulta_id) AS consultahora'
+            ])
+            ->where(['diagnosticos.profile_id' => Yii::$app->params['id']])
             ->asArray()
             ->all();
 
