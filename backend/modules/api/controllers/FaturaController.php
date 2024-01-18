@@ -23,6 +23,21 @@ class FaturaController extends ActiveController
         return $behaviors;
     }
 
+
+    //Serve para filtrar atraves do token os diagnósticos do perfil autenticado
+    public function actionGetPerfilFatura()
+    {
+        $model = new $this->modelClass;
+
+        $faturas = $model::find()
+            ->select(['id', 'data', 'valortotal', 'ivatotal', 'subtotal','estado','profile_id'])
+            ->where(['profile_id'=>Yii::$app->params['id']])
+            ->asArray()
+            ->all();
+
+        return $faturas;
+    }
+
     public function actionAlterarestado($profile_id)
     {
         $novo_estado = \Yii::$app->request->post('estado');
