@@ -79,8 +79,6 @@ return [
                         '{profileid}' => '<profileid:\\d+>',
                         '{data}' => '<data:[\\w-]+>',
                         '{consultaid}' => '<consultaid:\\w+>', //[a-zA-Z0-9_] 1 ou + vezes (char)
-
-
                     ],
                 ],
                 //////////////////////////////////////DIAGNOSTICO//////////////////////////////////////////////////////////
@@ -105,7 +103,7 @@ return [
                     'extraPatterns' => [
                         'PUT alterarpreco/{nome}' => 'alterarpreco', // 'alterarpreco' é 'actionAlterarpreco'
                         'GET {id}' => 'produtoid', // 'produtoid' é 'actionProdutoid'
-                       
+                        'GET produtosimagem' => 'produtosimagem', // 'produtoimagens' é 'actionProdutoimagens'
                     ],
                     'tokens' => [
                         '{nome}' => '<nome:\\w+>',
@@ -119,7 +117,6 @@ return [
 
                     'extraPatterns' => [
                         'GET {descricao}' => 'servicospeladescricao', // 'servicospeladescricao' é 'actionServicospeladescricao'
-
                     ],
                     'tokens' => [
                         '{descricao}' => '<descricao:\\w+>',

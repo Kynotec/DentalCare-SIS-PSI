@@ -29,14 +29,6 @@ class ConsultaController extends ActiveController
         return ['count' => count($consulta)];
     }
 
-    public function checkAccess($action, $model = null, $params = [])
-    {
-        if ($model !== null) {
-            if ($model->id == 2 && $action === "delete") {
-                throw new yii\web\ForbiddenHttpException("Acesso Proibido!");
-            }
-        }
-    }
 
     public function actionDelporid($consultaid)
     {
@@ -61,4 +53,5 @@ class ConsultaController extends ActiveController
             throw new \yii\web\NotFoundHttpException("O Id do Utente nao existe!");
         }
     }
+
 }

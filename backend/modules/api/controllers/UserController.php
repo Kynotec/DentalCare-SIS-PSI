@@ -30,9 +30,7 @@ class UserController extends ActiveController
     public function actionGetPerfil()
     {
         $model = new $this->modelClass;
-
         $perfil = $model::findOne(Yii::$app->params['id']);
-
         return $perfil;
     }
 
