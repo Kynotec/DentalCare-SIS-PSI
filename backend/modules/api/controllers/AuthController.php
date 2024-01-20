@@ -43,9 +43,10 @@ class AuthController extends ActiveController
         {
             $profiles = Profiles::findOne($user->getId());
             $nome = $profiles->nome;
+            $user_id =$user->id;
             $token = $user->auth_key;
             // $token = base64_encode($username.":".$password);
-            return ['token' =>$token, 'success' => true, 'username' => $nome];
+            return ['token' =>$token, 'success' => true, 'username' => $nome,'user_id'=>$user_id];
         }
 
         return ['success' => false];

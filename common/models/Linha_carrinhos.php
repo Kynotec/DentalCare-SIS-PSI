@@ -34,8 +34,9 @@ class Linha_carrinhos extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['quantidade', 'valorunitario', 'valoriva', 'valortotal'], 'number'],
+            [['quantidade', 'valoriva','valorunitario', 'valortotal'], 'number'],
             [['carrinho_id', 'produto_id'], 'integer'],
+            [['quantidade'], 'integer', 'min' => 1],
             [['produto_id'], 'required'],
             [['carrinho_id'], 'exist', 'skipOnError' => true, 'targetClass' => Carrinhos::class, 'targetAttribute' => ['carrinho_id' => 'id']],
             [['produto_id'], 'exist', 'skipOnError' => true, 'targetClass' => Produtos::class, 'targetAttribute' => ['produto_id' => 'id']],
@@ -50,7 +51,6 @@ class Linha_carrinhos extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'quantidade' => 'Quantidade',
-            'valorunitario' => 'Valorunitario',
             'valoriva' => 'Valoriva',
             'valortotal' => 'Valortotal',
             'carrinho_id' => 'Carrinho ID',
@@ -76,5 +76,23 @@ class Linha_carrinhos extends \yii\db\ActiveRecord
     public function getProduto()
     {
         return $this->hasOne(Produtos::class, ['id' => 'produto_id']);
+    }
+
+    public function calcularTotal()
+    {
+        return $this->quantidade * $this->valorunitario + $this->valoriva;
+    }
+
+    public function calcularTotalIva()
+    {
+        return $this->quantidade * $this->produto->precounitario * $this->produto->iva_id;
+    }
+
+    public function recalcularIva()
+    {
+        if ($this->produto) {
+            $this->valoriva = $this->produto->calcularIva()* $this->quantidade;
+            $this->save();
+        }
     }
 }

@@ -9,10 +9,11 @@ use Yii;
  *
  * @property int $id
  * @property string|null $data
- * @property int|null $stock
  * @property float|null $valortotal
+ * @property int $user_id
  *
- * @property Linha_carrinhos[] $linha_carrinhos
+ * @property Linha_carrinhos[] $linhaCarrinhos
+ * @property User $user
  */
 class Carrinhos extends \yii\db\ActiveRecord
 {
@@ -31,8 +32,10 @@ class Carrinhos extends \yii\db\ActiveRecord
     {
         return [
             [['data'], 'safe'],
-            [['stock'], 'integer'],
             [['valortotal'], 'number'],
+            [['user_id'], 'required'],
+            [['user_id'], 'integer'],
+            [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['user_id' => 'id']],
         ];
     }
 
@@ -44,8 +47,8 @@ class Carrinhos extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'data' => 'Data',
-            'stock' => 'Stock',
             'valortotal' => 'Valortotal',
+            'user_id' => 'User ID',
         ];
     }
 
@@ -58,4 +61,31 @@ class Carrinhos extends \yii\db\ActiveRecord
     {
         return $this->hasMany(Linha_carrinhos::class, ['carrinho_id' => 'id']);
     }
+
+    /**
+     * Gets query for [[User]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getUser()
+    {
+        return $this->hasOne(User::class, ['id' => 'user_id']);
+    }
+
+
+    public function calcularTotalCarrinho()
+    {
+        $totalCarrinho = 0;
+
+        foreach ($this->linhaCarrinhos as $linhaCarrinho) {
+            $totalCarrinho += $linhaCarrinho->calcularTotal();
+        }
+
+        $this->valortotal = $totalCarrinho;
+        $this->save();
+
+        return $totalCarrinho;
+    }
+
+
 }

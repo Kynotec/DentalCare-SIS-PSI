@@ -58,10 +58,14 @@ return [
 
                     'extraPatterns' => [
                         'GET {user_id}' => 'datacarrinho', // 'datacarrinho' é 'actionDatacarrinho'
+                        'PUT adicionar/{produto_id}/user/{user_id}' =>'adicionar',
+                        'GET buscarcarrinho/user/{user_id}' =>'buscarcarrinho'
+
 
                     ],
                     'tokens' => [
                         '{user_id}' => '<user_id:\\d+>',
+                        '{produto_id}' => '<produto_id:\\d+>',
                     ],
                 ],
                 //////////////////////////////////////CONSULTA//////////////////////////////////////////////////////////

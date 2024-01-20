@@ -24,9 +24,28 @@ use Yii;
  */
 class Produtos extends \yii\db\ActiveRecord
 {
-    /**
-     * {@inheritdoc}
-     */
+    const STATUS_DELETED = 0;
+    const STATUS_INACTIVE = 9;
+    const STATUS_ACTIVE = 10;
+
+
+
+    public function getStatusLabel()
+    {
+        switch ($this->ativo)
+        {
+            case self::STATUS_ACTIVE:
+                return '<span class="badge badge-success">Ativo</span>';
+
+            case self::STATUS_INACTIVE:
+                return '<span class="badge badge-danger">Desativado</span>';
+
+            default:
+                return '<span class="badge badge-info">' . $this->ativo . '</span>';
+        }
+    }
+
+
     public static function tableName()
     {
         return 'produtos';
@@ -38,13 +57,16 @@ class Produtos extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['ativo', 'stock', 'iva_id', 'categoria_id'], 'integer'],
+            [['stock', 'iva_id', 'categoria_id'], 'integer'],
             [['nome'], 'required'],
+            [['nome','iva_id','categoria_id','descricao','precounitario','stock'], 'required'],
             [['descricao'], 'string'],
             [['precounitario'], 'number'],
             [['nome'], 'string', 'max' => 250],
             [['iva_id'], 'exist', 'skipOnError' => true, 'targetClass' => Iva::class, 'targetAttribute' => ['iva_id' => 'id']],
-            [['categoria_id'], 'exist', 'skipOnError' => true, 'targetClass' => Categorias::class, 'targetAttribute' => ['categoria_id' => 'id']],
+            [['categoria_id'], 'exist', 'skipOnError' => true, 'targetClass' => Categoria::class, 'targetAttribute' => ['categoria_id' => 'id']],
+            ['ativo', 'default', 'value' => self::STATUS_ACTIVE],
+            ['ativo', 'in', 'range' => [self::STATUS_ACTIVE, self::STATUS_INACTIVE, self::STATUS_DELETED]],
         ];
     }
 
@@ -55,13 +77,15 @@ class Produtos extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'ativo' => 'Ativo',
+
+            'filename' =>'Imagem do Produto',
             'nome' => 'Nome',
-            'descricao' => 'Descricao',
-            'precounitario' => 'Precounitario',
+            'descricao' => 'Descrição',
+            'precounitario' => 'Preço unitario',
             'stock' => 'Stock',
-            'iva_id' => 'Iva ID',
-            'categoria_id' => 'Categoria ID',
+            'iva_id' => 'Iva',
+            'categoria_id' => 'Categoria',
+            'ativo' => 'Estado',
         ];
     }
 
@@ -72,7 +96,7 @@ class Produtos extends \yii\db\ActiveRecord
      */
     public function getCategoria()
     {
-        return $this->hasOne(Categorias::class, ['id' => 'categoria_id']);
+        return $this->hasOne(Categoria::class, ['id' => 'categoria_id']);
     }
 
     /**
@@ -82,7 +106,11 @@ class Produtos extends \yii\db\ActiveRecord
      */
     public function getImagens()
     {
-        return $this->hasMany(Imagens::class, ['produto_id' => 'id']);
+        return $this->hasMany(Imagem::class, ['produto_id' => 'id']);
+    }
+    public function getShortDescription()
+    {
+        return \yii\helpers\StringHelper::truncateWords(strip_tags($this->descricao), 20);
     }
 
     /**
@@ -95,6 +123,14 @@ class Produtos extends \yii\db\ActiveRecord
         return $this->hasOne(Iva::class, ['id' => 'iva_id']);
     }
 
+    public function calcularIva()
+    {
+        if ($this->iva) {
+            return $this->precounitario * ($this->iva->percentagem / 100);
+        }
+        return 0;
+    }
+
     /**
      * Gets query for [[LinhaCarrinhos]].
      *
@@ -102,7 +138,7 @@ class Produtos extends \yii\db\ActiveRecord
      */
     public function getLinhaCarrinhos()
     {
-        return $this->hasMany(Linha_Carrinhos::class, ['produto_id' => 'id']);
+        return $this->hasMany(LinhaCarrinho::class, ['produto_id' => 'id']);
     }
 
     /**
@@ -112,6 +148,6 @@ class Produtos extends \yii\db\ActiveRecord
      */
     public function getLinhaFaturas()
     {
-        return $this->hasMany(Linha_Faturas::class, ['produto_id' => 'id']);
+        return $this->hasMany(LinhaFatura::class, ['produto_id' => 'id']);
     }
 }
