@@ -47,7 +47,6 @@ return [
             'errorAction' => 'site/error',
         ],
 
-
         //////////////////////////////////////CARRINHO//////////////////////////////////////////////////////////
         'urlManager' => [
             'enablePrettyUrl' => true,
@@ -150,6 +149,19 @@ return [
                     ],
                     'tokens' => [
                         '{profile_id}' => '<profile_id:\\w+>',
+                    ],
+                ],
+                //////////////////////////////////////LINHAFATURA//////////////////////////////////////////////////////////
+                ['class' => 'yii\rest\UrlRule',
+                    'controller' => 'api/linhafatura',
+                    'pluralize' =>false,
+
+                    'extraPatterns' => [
+                        'GET linha/{fatura_id}' => 'linhafaturadados', // 'linhafatura' é 'actionLinhafatura'
+
+                    ],
+                    'tokens' => [
+                        '{fatura_id}' => '<fatura_id:\\d+>',
                     ],
                 ],
                 //////////////////////////////////////IVA//////////////////////////////////////////////////////////

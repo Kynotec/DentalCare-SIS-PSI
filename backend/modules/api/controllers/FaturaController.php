@@ -24,7 +24,7 @@ class FaturaController extends ActiveController
     }
 
 
-    //Serve para filtrar atraves do token os diagnósticos do perfil autenticado
+    //Serve para filtrar atraves do token as faturas do perfil autenticado
     public function actionGetPerfilFatura()
     {
         $model = new $this->modelClass;
@@ -37,6 +37,7 @@ class FaturaController extends ActiveController
 
         return $faturas;
     }
+
 
     public function actionAlterarestado($profile_id)
     {
@@ -58,5 +59,4 @@ class FaturaController extends ActiveController
             throw new \yii\web\NotFoundHttpException("O id do Utente não existe!");
         }
     }
-
 }
