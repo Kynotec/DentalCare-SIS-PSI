@@ -3,13 +3,12 @@
 namespace backend\modules\api\controllers;
 
 use backend\modules\api\components\CustomAuth;
-use Carbon\Carbon;
 
-use common\models\Carrinho;
+use common\models\Faturas;
+use common\models\Imagens;
 use common\models\Carrinhos;
 use common\models\Linha_carrinhos;
-
-
+use common\models\Linha_faturas;
 use common\models\Produtos;
 use yii\rest\ActiveController;
 use yii\filters\auth\QueryParamAuth;
@@ -33,17 +32,21 @@ class CarrinhoController extends ActiveController
 
     public function actionBuscarcarrinho($user_id)
     {
-        $carrinho = Carrinhos::find()->where(['user_id' => $user_id])->one();
+        $carrinhos = Carrinhos::find()->where(['user_id' => $user_id])->one();
 
-        if ($carrinho) {
+        if ($carrinhos) {
             // Busca as linhas do carrinho
-            $linhasCarrinho = Linha_carrinhos::find()->where(['carrinho_id' => $carrinho->id])->all();
-
-            // Aqui você pode retornar as informações encontradas, ajuste conforme necessário
-            return [
-                'carrinho' => $carrinho,
-                'linhasCarrinho' => $linhasCarrinho,
-            ];
+            $linhasCarrinho = Linha_carrinhos::find()->where(['carrinho_id' => $carrinhos->id])->all();
+            $linhasCarrinhoarray = [];
+            foreach ($linhasCarrinho as $linhaCarrinho){
+                $imagem = Imagens::find()->where(['produto_id'=>$linhaCarrinho->produto_id])->one();
+                $linhasCarrinhoarray[] = ['id'=>$linhaCarrinho->id,
+                    'nome'=>$linhaCarrinho->produto->nome,
+                    'quantidade'=>$linhaCarrinho->quantidade,
+                    'valortotal'=>$linhaCarrinho->valortotal,
+                    'imagem'=>$imagem->filename];
+            }
+            return $linhasCarrinhoarray;
         }
 
         // Retorna algo indicando que o carrinho não foi encontrado
@@ -52,6 +55,62 @@ class CarrinhoController extends ActiveController
         ];
     }
 
+    public function actionRemoverlinhacarrinho($carrinhoid)
+    {
+        $linhasCarrinho = Linha_carrinhos::findOne($carrinhoid);
+        if ($linhasCarrinho) // se existir
+        {
+            $linhasCarrinho->delete();
+            return true;
+        }
+        return false;
+    }
+
+
+    public function actionCheckoutcarrinho($user_id)
+    {
+
+            $carrinho = Carrinhos::find()->where(['user_id' => $user_id])->one();
+
+
+            if ($carrinho) {
+
+                    $fatura = new Faturas();
+                    $fatura->profile_id = $user_id;
+                    $fatura->data = date('Y-m-d');
+                    $fatura->valortotal = 0;
+                    $fatura->ivatotal = 0;
+                    $fatura->subtotal = 0;
+                    $fatura->estado = 'Pago';
+                    $fatura->save();
+                    $carrinhoforeach = $carrinho->getLinhaCarrinhos()->all();
+
+                    foreach ($carrinhoforeach as $linhaCarrinho) {
+                        $linhaFatura = new Linha_faturas();
+                        $linhaFatura->fatura_id = $fatura->id;
+                        $linhaFatura->produto_id = $linhaCarrinho->produto_id;
+                        $linhaFatura->quantidade = (int)$linhaCarrinho->quantidade;
+                        $linhaFatura->valorunitario = $linhaCarrinho->valorunitario;
+                        $linhaFatura->valoriva = $linhaCarrinho->valoriva;
+                        $linhaFatura->valortotal = $linhaCarrinho->valortotal;
+                        $linhaFatura->save();
+
+                        // Atualiza os valores totais da fatura com base na linha_fatura
+                        $fatura->valortotal += $linhaFatura->valortotal;
+                        $fatura->ivatotal += $linhaFatura->valoriva;
+                        $fatura->subtotal += $linhaFatura->valortotal - $linhaFatura->valoriva;
+                    }
+                    $fatura->save();
+
+                    //Remover o carrinho
+                    $carrinho->delete();
+                    return true;
+            }else{
+                return false;
+
+            }
+
+    }
 
 
     public function actionAdicionar($produto_id, $user_id)
@@ -65,7 +124,7 @@ class CarrinhoController extends ActiveController
         if (!$carrinho) {
             $carrinho = new Carrinhos();
             $carrinho->user_id = $user_id;
-            $carrinho->data = Carbon::now();
+            $carrinho->data = date('Y-m-d');
             $carrinho->save();
         }
 

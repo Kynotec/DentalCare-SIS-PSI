@@ -36,12 +36,13 @@ class Linha_faturas extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['quantidade', 'valorunitario', 'valoriva', 'valortotal'], 'number'],
-            [['fatura_id', 'produto_id', 'servico_id'], 'integer'],
-            [['servico_id'], 'required'],
-            [['fatura_id'], 'exist', 'skipOnError' => true, 'targetClass' => Faturas::class, 'targetAttribute' => ['fatura_id' => 'id']],
+            [['quantidade', 'valorunitario', 'valoriva', 'valortotal', 'fatura_id'], 'required'],
+            [['quantidade', 'fatura_id', 'produto_id', 'servico_id'], 'integer'],
+            [['valorunitario', 'valoriva', 'valortotal'], 'number'],
             [['produto_id'], 'exist', 'skipOnError' => true, 'targetClass' => Produtos::class, 'targetAttribute' => ['produto_id' => 'id']],
             [['servico_id'], 'exist', 'skipOnError' => true, 'targetClass' => Servicos::class, 'targetAttribute' => ['servico_id' => 'id']],
+            [['fatura_id'], 'exist', 'skipOnError' => true, 'targetClass' => Faturas::class, 'targetAttribute' => ['fatura_id' => 'id']],
+
         ];
     }
 

@@ -43,6 +43,32 @@ class ConsultaController extends ActiveController
         return $marcacoes;
     }
 
+    public function actionAtualizarconsulta()
+    {
+        $request=\Yii::$app->request->post();
+        $climodel = new $this->modelClass;
+
+        $ret = $climodel::findOne(Yii::$app->params['id']);
+
+        if($ret) {
+            $ret->nome = $request['nome'];
+            $ret->descricao = $request['descricao'];
+            $ret->data = $request['data'];
+            $ret->hora = $request['hora'];
+            $ret->estado = $request['estado'];
+            $ret->profile_id = $request['profile_id'];
+            $ret->servico_id = $request['servico_id'];
+            $ret->save();
+            return ["success" => true];
+
+        }
+
+        else {
+
+            return ["success" => false];
+        }
+    }
+
     public function actionCount($data)
     {
         $consultamodel = new $this->modelClass;
